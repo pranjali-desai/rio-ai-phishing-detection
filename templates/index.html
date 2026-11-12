@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phishing Email Detector</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="container py-5">
+    <header class="page-header mb-4">
+      <h1 class="mb-2">Phishing Email Detector</h1>
+      <p class="text-secondary mb-0">Analyze email content and identify potential phishing or spam threats.</p>
+    </header>
+
+    <section class="card p-4">
+      <form id="analysisForm" action="{{ url_for('analyze') }}" method="POST">
+        <label for="emailText" class="form-label">Email content</label>
+        <textarea
+          id="emailText"
+          name="email_text"
+          class="form-control"
+          rows="9"
+          placeholder="Paste email subject and body here..."
+          required
+        >{{ email_text|default('', true) }}</textarea>
+
+        <label for="sender" class="form-label mt-3">Sender address (optional)</label>
+        <input
+          id="sender"
+          name="sender"
+          class="form-control"
+          type="text"
+          value="{{ sender|default('', true) }}"
+          placeholder="sender@example.com"
+        >
+
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <button class="btn btn-primary" type="submit">Analyze Email</button>
+          <button class="btn btn-outline-secondary" id="clearButton" type="button">Clear email</button>
+        </div>
+      </form>
+
+      {% if error %}
+        <div class="alert alert-warning mt-4 mb-0" role="alert">{{ error }}</div>
+      {% endif %}
+
+      {% if result %}
+      <section class="result-card result-{{ result.risk_level }} mt-4" aria-live="polite">
+        <div class="result-heading">
+          <h2>Email Analysis Results</h2>
+          <span class="result-badge">{{ result.risk_label }}</span>
+        </div>
+
+        <div class="score-label">PHISHING RISK SCORE</div>
+        <div class="score-line">
+          <span class="score-value">{{ result.risk_score }}%</span>
+          <span class="risk-description">{{ result.risk_label }}</span>
+        </div>
+
+        <div
+          class="risk-track"
+          role="progressbar"
+          aria-label="Phishing risk score"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="{{ result.risk_score }}"
+        >
+          <!-- JavaScript sets the width from this data attribute.
+               This avoids putting Jinja template syntax inside inline CSS. -->
+          <div class="risk-fill" data-score="{{ result.risk_score }}"></div>
+        </div>
+
+        <div class="risk-scale">
+          <span>Low risk</span>
+          <span>Medium</span>
+          <span>High risk</span>
+        </div>
+
+        <div class="result-divider"></div>
+
+        <h3 class="reasons-heading">Why was this email flagged?</h3>
+        <div class="reason-list">
+          {% for reason in result.reasons %}
+          <article class="reason-item">
+            <span class="reason-icon" aria-hidden="true">
+              {% if "Urgent" in reason.title %}!
+              {% elif "Links" in reason.title %}↗
+              {% elif "sensitive" in reason.title %}⚿
+              {% elif "Sender" in reason.title %}@
+              {% else %}i{% endif %}
+            </span>
+            <div>
+              <h4>{{ reason.title }}</h4>
+              <p>{{ reason.detail }}</p>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+
+        <div class="model-summary">
+          <strong>Model classification:</strong> {{ result.model_label }}.
+          {{ result.message }}
+        </div>
+
+        <p class="result-note mb-0">
+          The score is the model's estimated probability, not a guarantee.
+          Links and sender details should be checked independently.
+        </p>
+      </section>
+      {% endif %}
+    </section>
+  </main>
+
+  <script>
+    // Set the heatmap width using the score supplied by Flask.
+    const riskFill = document.querySelector(".risk-fill");
+
+    if (riskFill) {
+      const score = Number(riskFill.dataset.score);
+      const safeScore = Number.isFinite(score)
+        ? Math.min(100, Math.max(0, score))
+        : 0;
+
+      riskFill.style.width = safeScore + "%";
+    }
+
+    // Keep the email and sender after analysis. Clear them only on user request.
+    document.getElementById("clearButton").addEventListener("click", function () {
+      document.getElementById("emailText").value = "";
+      document.getElementById("sender").value = "";
+
+      const oldResult = document.querySelector(".result-card");
+      if (oldResult) oldResult.remove();
+
+      const oldError = document.querySelector(".alert");
+      if (oldError) oldError.remove();
+
+      document.getElementById("emailText").focus();
+    });
+  </script>
+</body>
+</html>

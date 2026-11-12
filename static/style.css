@@ -1,0 +1,243 @@
+body {
+  background: #08090b;
+  color: #e8e9ed;
+  min-height: 100vh;
+}
+
+.page-header h1 {
+  color: #f4f5f7;
+  font-weight: 700;
+}
+
+.card {
+  background: #101114;
+  color: #e8e9ed;
+  border: 1px solid #292b31;
+  border-radius: 18px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.22);
+}
+
+.form-label {
+  color: #e8e9ed;
+  font-weight: 600;
+}
+
+.form-control {
+  background: #090a0c;
+  color: #f4f5f7;
+  border: 1px solid #3a3d45;
+}
+
+.form-control:focus {
+  background: #090a0c;
+  color: #f4f5f7;
+  border-color: #7b91ff;
+  box-shadow: 0 0 0 0.2rem rgba(123, 145, 255, 0.16);
+}
+
+.form-control::placeholder {
+  color: #9296a0;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 180px;
+}
+
+.btn-primary {
+  background: #637ff0;
+  border-color: #637ff0;
+}
+
+.btn-primary:hover {
+  background: #506bd8;
+  border-color: #506bd8;
+}
+
+.btn-outline-secondary {
+  color: #c6c9d1;
+  border-color: #555965;
+}
+
+.btn-outline-secondary:hover {
+  color: #fff;
+  background: #30333b;
+  border-color: #777c89;
+}
+
+/* The score band controls the result accent colour. */
+.result-card {
+  --risk-color: #22c55e;
+  --risk-tint: rgba(34, 197, 94, 0.09);
+  border: 1px solid color-mix(in srgb, var(--risk-color) 42%, #292b31);
+  border-radius: 18px;
+  padding: 26px;
+  background: linear-gradient(145deg, var(--risk-tint), #101114 48%);
+}
+
+.result-low {
+  --risk-color: #22c55e;
+  --risk-tint: rgba(34, 197, 94, 0.10);
+}
+
+.result-medium {
+  --risk-color: #f59e0b;
+  --risk-tint: rgba(245, 158, 11, 0.10);
+}
+
+.result-high {
+  --risk-color: #ef4444;
+  --risk-tint: rgba(239, 68, 68, 0.12);
+}
+
+.result-heading,
+.score-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.result-heading h2 {
+  font-size: 1.45rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.result-badge {
+  color: var(--risk-color);
+  background: var(--risk-tint);
+  border: 1px solid color-mix(in srgb, var(--risk-color) 38%, transparent);
+  border-radius: 999px;
+  padding: 6px 13px;
+  font-weight: 650;
+}
+
+.score-label {
+  margin-top: 27px;
+  color: #c4c6cc;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.score-line {
+  justify-content: flex-start;
+  margin: 7px 0 15px;
+}
+
+.score-value {
+  color: var(--risk-color);
+  font-size: clamp(2.2rem, 5vw, 3rem);
+  font-weight: 750;
+  letter-spacing: -1px;
+}
+
+.risk-description {
+  color: #c7c9cf;
+  font-size: 1.05rem;
+}
+
+.risk-track {
+  width: 100%;
+  height: 14px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #303136;
+}
+
+.risk-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--risk-color);
+  transition: width 0.35s ease;
+  box-shadow: 0 0 14px color-mix(in srgb, var(--risk-color) 35%, transparent);
+}
+
+.risk-scale {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+  color: #b9bbc2;
+  font-size: 0.9rem;
+}
+
+.risk-scale span:first-child {
+  color: #22c55e;
+}
+
+.risk-scale span:nth-child(2) {
+  color: #f59e0b;
+}
+
+.risk-scale span:last-child {
+  color: #ef4444;
+}
+
+.result-divider {
+  height: 1px;
+  background: #292b31;
+  margin: 27px 0;
+}
+
+.reasons-heading {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.reason-list {
+  display: grid;
+  gap: 18px;
+}
+
+.reason-item {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.reason-icon {
+  color: var(--risk-color);
+  font-size: 1.35rem;
+  line-height: 1.3;
+  font-weight: 800;
+  text-align: center;
+}
+
+.reason-item h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.reason-item p {
+  color: #bfc1c8;
+  margin: 0;
+  line-height: 1.55;
+}
+
+.model-summary {
+  border-top: 1px solid #292b31;
+  margin-top: 24px;
+  padding-top: 18px;
+  color: #d4d6dc;
+}
+
+.result-note {
+  color: #969aa4;
+  font-size: 0.86rem;
+  margin-top: 14px;
+}
+
+@media (max-width: 576px) {
+  .result-card {
+    padding: 19px;
+  }
+
+  .risk-scale {
+    font-size: 0.78rem;
+  }
+}
